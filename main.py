@@ -36,7 +36,6 @@ docs = loader.load()
 documents = RecursiveCharacterTextSplitter(chunk_size=1000, chunk_overlap=200).split_documents(docs)
 
 #Storing chunks into vector DB
-#vectordb = FAISS.from_documents(documents,OpenAIEmbeddings())
 vectordb = Chroma.from_documents(documents, OpenAIEmbeddings())
 
 #Retriever
@@ -62,7 +61,6 @@ tools = [wiki, arxiv, pdf_tool]
 #Streamlit setup
 st.title("Chatbot using Groq")
 llm = ChatGroq(groq_api_key=groq_api_key, model_name="llama3-8b-8192")
-#llm = ChatGroq(groq_api_key=groq_api_key, model_name="mixtral-8x7b-32768")
 
 
 #Prompt
@@ -92,7 +90,6 @@ query = st.text_input("Input your query here")
 if st.button("Get Answer"):
     if query:
         start = time.process_time()
-        #response = agent_executor.invoke({"input": query})
         try:
             response = agent_executor.invoke({
                 "input": query,
@@ -104,20 +101,7 @@ if st.button("Get Answer"):
             #st.write(f"Response time: {response_time} seconds")
             st.markdown(f"<p style='color:blue;'>Response time: {response_time} seconds</p>", unsafe_allow_html=True)
         except Exception as e:
-            #st.markdown(f"<p style='color:red;'>Please enter a valid query!</p>", unsafe_allow_html=True)
             st.write(f"An error occurred: {e}")
 
-        #st.write("### Sources")
-        # for doc in context_documents:
-        #     st.write(f"- **Source:** {doc.metadata['source']}")
-        #     st.write(f"  **Content:** {doc.page_content[:200]}...")
-        # sources = response.get('source', '')
-        # if sources:
-        #     st.write("Sources:")
-        #     for source in sources:
-        #         st.write(source)
     else:
         st.write("Please enter a query")
-
-
-
