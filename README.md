@@ -80,3 +80,5 @@ Contributions/feedbacks are welcome! Please feel free to submit a Pull Request o
 - Special thanks to Groq for their high-performance inference engine.
 
 ---
+
+![Chatbot Demo](./chatbot_groq.jpg)
