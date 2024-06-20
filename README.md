@@ -81,4 +81,5 @@ Contributions/feedbacks are welcome! Please feel free to submit a Pull Request o
 
 ---
 
-![Chatbot Demo](./chatbot_groq.jpg)
+![Chatbot Demo](RAG-Chatbot-using-Groq
+/chatbot_groq.jpg)
