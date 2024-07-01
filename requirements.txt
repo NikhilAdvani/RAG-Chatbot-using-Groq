@@ -25,4 +25,3 @@ langchain-objectbox
 opentelemetry-api==1.13.0
 opentelemetry-sdk==1.13.0
 protobuf==3.20.3
-pysqlite3
