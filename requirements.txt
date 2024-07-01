@@ -22,4 +22,4 @@ langchainhub
 sentence_transformers
 PyPDF2
 langchain-objectbox
-protobuf
+protobuf==5.27.2
