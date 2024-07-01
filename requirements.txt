@@ -22,3 +22,4 @@ langchainhub
 sentence_transformers
 PyPDF2
 langchain-objectbox
+protobuf
