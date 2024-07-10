@@ -88,21 +88,26 @@ agent_executor = AgentExecutor(agent = agent, tools = tools, verbose = True)
 
 query = st.text_input("Input your query here")
 
-if st.button("Get Answer"):
-    if query:
-        start = time.process_time()
-        try:
-            response = agent_executor.invoke({
-                "input": query,
-                "context": "Answer the questions based on the input query only",
-                "agent_scratchpad": ""
-            })
-            response_time = time.process_time() - start
-            st.write(response['output'])
-            #st.write(f"Response time: {response_time} seconds")
-            st.markdown(f"<p style='color:blue;'>Response time: {response_time} seconds</p>", unsafe_allow_html=True)
-        except Exception as e:
-            st.write(f"An error occurred: {e}")
+if (st.button("Get Answer") or query):
+    start_overall = time.time()
+    start_llm = time.process_time()
+    #response = agent_executor.invoke({"input": query})
+    try:
+        response = agent_executor.invoke({
+            "input": query,
+            "context": "",
+            "agent_scratchpad": ""
+        })
+        response_time_overall = time.time() - start_overall
+        response_time_llm = time.process_time() - start_llm
+        st.write(response['output'])
+        #st.write(f"Response time: {response_time} seconds")
+        st.markdown(f"<p style='color:blue;'>Overall Response Time: {response_time_overall} seconds</p>", unsafe_allow_html=True)
+        st.markdown(f"<p style='color:blue;'>LLM Response Time: {response_time_llm} seconds</p>", unsafe_allow_html=True)
 
-    else:
-        st.write("Please enter a query")
+    except Exception as e:
+        #st.markdown(f"<p style='color:red;'>Please enter a valid query!</p>", unsafe_allow_html=True)
+        st.write(f"An error occurred: {e}")
+        
+else:
+    st.write("Please enter a query")
