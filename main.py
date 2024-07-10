@@ -7,6 +7,7 @@ from langchain.text_splitter import RecursiveCharacterTextSplitter
 from langchain.chains.combine_documents import create_stuff_documents_chain
 from langchain_core.prompts import ChatPromptTemplate
 from langchain_community.vectorstores import Chroma
+from langchain.vectorstores import FAISS
 import time
 
 from dotenv import load_dotenv
@@ -37,7 +38,8 @@ docs = loader.load()
 documents = RecursiveCharacterTextSplitter(chunk_size=1000, chunk_overlap=200).split_documents(docs)
 
 #Storing chunks into vector DB
-vectordb = Chroma.from_documents(documents, OpenAIEmbeddings())
+#vectordb = Chroma.from_documents(documents, OpenAIEmbeddings())
+vectordb = FAISS.from_documents(documents, OpenAIEmbeddings())
 
 #Retriever
 retriever = vectordb.as_retriever()
