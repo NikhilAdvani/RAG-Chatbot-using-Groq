@@ -35,7 +35,7 @@ loader = PyPDFDirectoryLoader("./us_census_data")
 docs = loader.load()
 
 #Splitting the content into chunks
-documents = RecursiveCharacterTextSplitter(chunk_size=1000, chunk_overlap=200).split_documents(docs)
+documents = RecursiveCharacterTextSplitter(chunk_size=1000, chunk_overlap=100).split_documents(docs)
 
 #Storing chunks into vector DB
 #vectordb = Chroma.from_documents(documents, OpenAIEmbeddings())
