@@ -2,20 +2,32 @@ import streamlit as st
 import os
 from langchain_groq import ChatGroq
 from langchain_community.document_loaders import PyPDFDirectoryLoader
-from langchain.embeddings import OpenAIEmbeddings
 from langchain.text_splitter import RecursiveCharacterTextSplitter
 from langchain.chains.combine_documents import create_stuff_documents_chain
 from langchain_core.prompts import ChatPromptTemplate
 from langchain_community.vectorstores import Chroma
 from langchain.vectorstores import FAISS
+from sentence_transformers import SentenceTransformer
+from langchain.embeddings import HuggingFaceEmbeddings
 import time
+from joblib import Memory
 
 from dotenv import load_dotenv
 load_dotenv()
 
 #Loading the groq api key
 groq_api_key = os.getenv('GROQ_API_KEY')
-openai_api_key = os.getenv("OPENAI_API_KEY")
+
+# Create a cache directory for embeddings
+cachedir = './embedding_cache'
+memory = Memory(cachedir, verbose=0)
+
+# Define a function to get embeddings with caching
+@memory.cache
+def get_embeddings(documents):
+    model_name = "sentence-transformers/all-mpnet-base-v2"
+    embeddings = HuggingFaceEmbeddings(model_name=model_name)
+    return embeddings.embed_documents(documents)
 
 
 #Defining tools
@@ -35,11 +47,20 @@ loader = PyPDFDirectoryLoader("./us_census_data")
 docs = loader.load()
 
 #Splitting the content into chunks
-documents = RecursiveCharacterTextSplitter(chunk_size=1000, chunk_overlap=100).split_documents(docs)
+documents = RecursiveCharacterTextSplitter(chunk_size=500, chunk_overlap=50).split_documents(docs)
 
-#Storing chunks into vector DB
-#vectordb = Chroma.from_documents(documents, OpenAIEmbeddings())
-vectordb = FAISS.from_documents(documents, OpenAIEmbeddings())
+# Extract text content from Document objects
+texts = [doc.page_content for doc in documents]
+
+# Get embeddings (cached)
+embeddings = get_embeddings(texts)
+
+# Storing chunks into vector DB
+vectordb = FAISS.from_documents(documents, HuggingFaceEmbeddings(model_name="sentence-transformers/all-mpnet-base-v2"))
+
+# #Storing chunks into vector DB
+# #vectordb = Chroma.from_documents(documents, OpenAIEmbeddings())
+# vectordb = FAISS.from_documents(documents, OpenAIEmbeddings())
 
 #Retriever
 retriever = vectordb.as_retriever()
