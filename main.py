@@ -6,11 +6,14 @@ from langchain.text_splitter import RecursiveCharacterTextSplitter
 from langchain.chains.combine_documents import create_stuff_documents_chain
 from langchain_core.prompts import ChatPromptTemplate
 from langchain_community.vectorstores import Chroma
-from langchain.vectorstores import FAISS
+from langchain_community.vectorstores import FAISS
 from sentence_transformers import SentenceTransformer
-from langchain.embeddings import HuggingFaceEmbeddings
+from langchain_community.embeddings import HuggingFaceEmbeddings
 import time
 from joblib import Memory
+
+# Disable Streamlit file watcher for torch
+Server.get_current()._watcher._local_sources_watcher._watched_modules.discard("torch")
 
 from dotenv import load_dotenv
 load_dotenv()
