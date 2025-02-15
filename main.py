@@ -18,16 +18,16 @@ load_dotenv()
 #Loading the groq api key
 groq_api_key = os.getenv('GROQ_API_KEY')
 
-# Create a cache directory for embeddings
-cachedir = './embedding_cache'
-memory = Memory(cachedir, verbose=0)
+# # Create a cache directory for embeddings
+# cachedir = './embedding_cache'
+# memory = Memory(cachedir, verbose=0)
 
-# Define a function to get embeddings with caching
-@memory.cache
-def get_embeddings(documents):
-    model_name = "sentence-transformers/all-mpnet-base-v2"
-    embeddings = HuggingFaceEmbeddings(model_name=model_name)
-    return embeddings.embed_documents(documents)
+# # Define a function to get embeddings with caching
+# @memory.cache
+# def get_embeddings(documents):
+#     model_name = "sentence-transformers/all-mpnet-base-v2"
+#     embeddings = HuggingFaceEmbeddings(model_name=model_name)
+#     return embeddings.embed_documents(documents)
 
 
 #Defining tools
@@ -49,18 +49,11 @@ docs = loader.load()
 #Splitting the content into chunks
 documents = RecursiveCharacterTextSplitter(chunk_size=500, chunk_overlap=50).split_documents(docs)
 
-# Extract text content from Document objects
-texts = [doc.page_content for doc in documents]
-
-# Get embeddings (cached)
-embeddings = get_embeddings(texts)
+model_name = "sentence-transformers/all-mpnet-base-v2"
+embeddings = HuggingFaceEmbeddings(model_name=model_name)
 
 # Storing chunks into vector DB
-vectordb = FAISS.from_documents(documents, HuggingFaceEmbeddings(model_name="sentence-transformers/all-mpnet-base-v2"))
-
-# #Storing chunks into vector DB
-# #vectordb = Chroma.from_documents(documents, OpenAIEmbeddings())
-# vectordb = FAISS.from_documents(documents, OpenAIEmbeddings())
+vectordb = FAISS.from_documents(documents, embeddings)
 
 #Retriever
 retriever = vectordb.as_retriever()
