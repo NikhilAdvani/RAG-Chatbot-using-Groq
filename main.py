@@ -1,4 +1,6 @@
 import streamlit as st
+st.runtime.legacy_caching.clear_cache()  # Disable file watcher
+
 import os
 from langchain_groq import ChatGroq
 from langchain_community.document_loaders import PyPDFDirectoryLoader
@@ -10,10 +12,6 @@ from langchain_community.vectorstores import FAISS
 from sentence_transformers import SentenceTransformer
 from langchain_community.embeddings import HuggingFaceEmbeddings
 import time
-from joblib import Memory
-
-# Disable Streamlit file watcher for torch
-Server.get_current()._watcher._local_sources_watcher._watched_modules.discard("torch")
 
 from dotenv import load_dotenv
 load_dotenv()
