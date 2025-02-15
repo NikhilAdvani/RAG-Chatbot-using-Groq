@@ -12,13 +12,12 @@ from langchain_community.embeddings import HuggingFaceEmbeddings
 import time
 from dotenv import load_dotenv
 
-# Suppress Streamlit file watcher error for torch
+# Suppress PyTorch error caused by Streamlit file watcher
 try:
-    from streamlit.web.server import Server
-    from streamlit.runtime import Runtime
-    Server.get_current()._watcher._local_sources_watcher._watched_modules.discard("torch")
+    import torch
+    torch._C._get_custom_class_python_wrapper = lambda *args, **kwargs: None
 except Exception as e:
-    st.warning(f"Failed to disable file watcher for torch: {e}")
+    st.warning(f"Failed to suppress PyTorch error: {e}")
 
 load_dotenv()
 
