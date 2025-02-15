@@ -1,6 +1,4 @@
 import streamlit as st
-st.runtime.legacy_caching.clear_cache()  # Disable file watcher
-
 import os
 from langchain_groq import ChatGroq
 from langchain_community.document_loaders import PyPDFDirectoryLoader
@@ -12,8 +10,16 @@ from langchain_community.vectorstores import FAISS
 from sentence_transformers import SentenceTransformer
 from langchain_community.embeddings import HuggingFaceEmbeddings
 import time
-
 from dotenv import load_dotenv
+
+# Suppress Streamlit file watcher error for torch
+try:
+    from streamlit.web.server import Server
+    from streamlit.runtime import Runtime
+    Server.get_current()._watcher._local_sources_watcher._watched_modules.discard("torch")
+except Exception as e:
+    st.warning(f"Failed to disable file watcher for torch: {e}")
+
 load_dotenv()
 
 #Loading the groq api key
