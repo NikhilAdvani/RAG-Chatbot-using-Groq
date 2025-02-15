@@ -18,7 +18,7 @@ Welcome to the RAG Chatbot project! This chatbot leverages the LangChain framewo
 - **LangChain**: Framework for building language model applications.
 - **Streamlit**: For building an interactive web interface.
 - **PyPDFDirectoryLoader**: To load and process PDF documents.
-- **OpenAIEmbeddings**: For creating and managing embeddings.
+- **HuggingfaceEmbeddings**: For creating and managing embeddings.
 - **RecursiveCharacterTextSplitter**: For splitting documents into manageable chunks.
 - **Chroma**: Vector database for efficient document retrieval.
 - **WikipediaAPIWrapper**: Utility for interacting with the Wikipedia API.
