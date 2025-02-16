@@ -4,6 +4,7 @@ langchain_core
 python-dotenv
 streamlit
 langchain_community
+sentence-transformers
 langserve
 fastapi
 uvicorn
@@ -19,7 +20,6 @@ langchain-groq
 wikipedia
 arxiv
 langchainhub
-sentence_transformers
 PyPDF2
 langchain-objectbox
 opentelemetry-api==1.13.0
