@@ -8,7 +8,8 @@ from langchain_core.prompts import ChatPromptTemplate
 from langchain_community.vectorstores import Chroma
 from langchain_community.vectorstores import FAISS
 from sentence_transformers import SentenceTransformer
-from langchain_community.embeddings import HuggingFaceEmbeddings
+# from langchain_community.embeddings import HuggingFaceEmbeddings
+from langchain_community.embeddings import OpenAIEmbeddings
 import time
 from dotenv import load_dotenv
 
@@ -55,11 +56,12 @@ docs = loader.load()
 #Splitting the content into chunks
 documents = RecursiveCharacterTextSplitter(chunk_size=500, chunk_overlap=50).split_documents(docs)
 
-model_name = "sentence-transformers/all-mpnet-base-v2"
-embeddings = HuggingFaceEmbeddings(model_name=model_name)
+# model_name = "sentence-transformers/all-mpnet-base-v2"
+# embeddings = HuggingFaceEmbeddings(model_name=model_name)
 
 # Storing chunks into vector DB
-vectordb = FAISS.from_documents(documents, embeddings)
+# vectordb = FAISS.from_documents(documents, embeddings)
+vectordb = FAISS.from_documents(documents, OpenAIEmbeddings())
 
 #Retriever
 retriever = vectordb.as_retriever()
