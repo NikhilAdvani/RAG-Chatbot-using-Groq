@@ -11,10 +11,9 @@ from sentence_transformers import SentenceTransformer
 from langchain_community.embeddings import HuggingFaceEmbeddings
 from langchain_community.embeddings import OpenAIEmbeddings
 import time
-import torch
-import pandas as pd
-import matplotlib.pyplot as plt
-import requests
+# import torch
+# import pandas as pd
+# import requests
 from dotenv import load_dotenv
 
 # torch.classes.__path__ = []
