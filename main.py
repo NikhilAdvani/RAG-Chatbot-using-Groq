@@ -17,7 +17,6 @@ load_dotenv()
 
 #Loading the groq api key
 groq_api_key = os.getenv('GROQ_API_KEY')
-w
 
 # Streamlit caching for document loading and splitting
 @st.cache_data  # Cache documents across app runs
