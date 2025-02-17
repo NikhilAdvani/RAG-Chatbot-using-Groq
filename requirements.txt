@@ -21,6 +21,7 @@ wikipedia
 arxiv
 langchainhub
 PyPDF2
+matplotlib
 langchain-objectbox
 opentelemetry-api==1.13.0
 opentelemetry-sdk==1.13.0
