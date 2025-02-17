@@ -12,9 +12,12 @@ from langchain_community.embeddings import HuggingFaceEmbeddings
 from langchain_community.embeddings import OpenAIEmbeddings
 import time
 import torch
+import pandas as pd
+import matplotlib.pyplot as plt
+import requests
 from dotenv import load_dotenv
 
-torch.classes.__path__ = [os.path.join(torch.__path__[0], torch.classes.__file__)]
+torch.classes.__path__ = []
 
 load_dotenv()
 
