@@ -17,7 +17,7 @@ import matplotlib.pyplot as plt
 import requests
 from dotenv import load_dotenv
 
-torch.classes.__path__ = []
+# torch.classes.__path__ = []
 
 load_dotenv()
 
@@ -61,8 +61,8 @@ documents = load_and_split_documents()  # Load and split documents (cached)
 
 # Storing chunks into vector DB
 # vectordb = FAISS.from_documents(documents, embeddings)
-vectordb = FAISS.from_documents(documents, HuggingFaceEmbeddings(model_name="sentence-transformers/all-mpnet-base-v2"))
-# vectordb = FAISS.from_documents(documents, OpenAIEmbeddings())
+# vectordb = FAISS.from_documents(documents, HuggingFaceEmbeddings(model_name="sentence-transformers/all-mpnet-base-v2"))
+vectordb = FAISS.from_documents(documents, OpenAIEmbeddings())
 
 #Retriever
 retriever = vectordb.as_retriever()
