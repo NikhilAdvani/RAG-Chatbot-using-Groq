@@ -11,9 +11,6 @@ from sentence_transformers import SentenceTransformer
 # from langchain_community.embeddings import HuggingFaceEmbeddings
 from langchain_community.embeddings import OpenAIEmbeddings
 import time
-# import torch
-# import pandas as pd
-# import requests
 from dotenv import load_dotenv
 
 # torch.classes.__path__ = []
@@ -22,14 +19,6 @@ load_dotenv()
 
 #Loading the groq api key
 groq_api_key = os.getenv('GROQ_API_KEY')
-
-# Streamlit caching for document loading and splitting
-# @st.cache_data  # Cache documents across app runs
-# def load_and_split_documents():
-#     loader = PyPDFDirectoryLoader("./us_census_data")
-#     docs = loader.load()
-#     text_splitter = RecursiveCharacterTextSplitter(chunk_size=500, chunk_overlap=50)  # Smaller chunks
-#     return text_splitter.split_documents(docs)
 
 
 #Defining tools
@@ -43,20 +32,13 @@ wiki = WikipediaQueryRun(api_wrapper = wiki_wrapper)
 
 
 #Tool 2: PDF Search Tool
-# documents = load_and_split_documents()  # Load and split documents (cached)
-# texts = [doc.page_content for doc in documents]  # Extract text content
-
 loader = PyPDFDirectoryLoader("./us_census_data")
 docs = loader.load()
 
 # Splitting the content into chunks
 documents = RecursiveCharacterTextSplitter(chunk_size=500, chunk_overlap=50).split_documents(docs)
 
-# model_name = "sentence-transformers/all-mpnet-base-v2"
-# embeddings = HuggingFaceEmbeddings(model_name=model_name)
-
 # Storing chunks into vector DB
-# vectordb = FAISS.from_documents(documents, embeddings)
 # vectordb = FAISS.from_documents(documents, HuggingFaceEmbeddings(model_name="sentence-transformers/all-mpnet-base-v2"))
 vectordb = FAISS.from_documents(documents, OpenAIEmbeddings())
 
