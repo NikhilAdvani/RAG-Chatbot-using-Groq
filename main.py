@@ -13,28 +13,19 @@ from langchain_community.embeddings import OpenAIEmbeddings
 import time
 from dotenv import load_dotenv
 
-# # Suppress PyTorch error caused by Streamlit file watcher
-# try:
-#     import torch
-#     torch._C._get_custom_class_python_wrapper = lambda *args, **kwargs: None
-# except Exception as e:
-#     st.warning(f"Failed to suppress PyTorch error: {e}")
-
 load_dotenv()
 
 #Loading the groq api key
 groq_api_key = os.getenv('GROQ_API_KEY')
+w
 
-# # Create a cache directory for embeddings
-# cachedir = './embedding_cache'
-# memory = Memory(cachedir, verbose=0)
-
-# # Define a function to get embeddings with caching
-# @memory.cache
-# def get_embeddings(documents):
-#     model_name = "sentence-transformers/all-mpnet-base-v2"
-#     embeddings = HuggingFaceEmbeddings(model_name=model_name)
-#     return embeddings.embed_documents(documents)
+# Streamlit caching for document loading and splitting
+@st.cache_data  # Cache documents across app runs
+def load_and_split_documents():
+    loader = PyPDFDirectoryLoader("./us_census_data")
+    docs = loader.load()
+    text_splitter = RecursiveCharacterTextSplitter(chunk_size=500, chunk_overlap=50)  # Smaller chunks
+    return text_splitter.split_documents(docs)
 
 
 #Defining tools
@@ -47,21 +38,26 @@ wiki_wrapper = WikipediaAPIWrapper(top_k_results = 1, doc_content_chars_max=1000
 wiki = WikipediaQueryRun(api_wrapper = wiki_wrapper)
 
 
-
-
 #Tool 2: PDF Search Tool
-loader = PyPDFDirectoryLoader("./us_census_data")
-docs = loader.load()
+documents = load_and_split_documents()  # Load and split documents (cached)
+# texts = [doc.page_content for doc in documents]  # Extract text content
 
-#Splitting the content into chunks
-documents = RecursiveCharacterTextSplitter(chunk_size=500, chunk_overlap=50).split_documents(docs)
+# Get embeddings (cached)
+# embeddings = get_embeddings(texts)
+
+# loader = PyPDFDirectoryLoader("./us_census_data")
+# docs = loader.load()
+
+# Splitting the content into chunks
+# documents = RecursiveCharacterTextSplitter(chunk_size=500, chunk_overlap=50).split_documents(docs)
 
 # model_name = "sentence-transformers/all-mpnet-base-v2"
 # embeddings = HuggingFaceEmbeddings(model_name=model_name)
 
 # Storing chunks into vector DB
 # vectordb = FAISS.from_documents(documents, embeddings)
-vectordb = FAISS.from_documents(documents, OpenAIEmbeddings())
+vectordb = FAISS.from_documents(documents, HuggingFaceEmbeddings(model_name="sentence-transformers/all-mpnet-base-v2"))
+# vectordb = FAISS.from_documents(documents, OpenAIEmbeddings())
 
 #Retriever
 retriever = vectordb.as_retriever()
