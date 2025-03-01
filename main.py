@@ -9,7 +9,7 @@ from langchain_community.vectorstores import Chroma
 from langchain_community.vectorstores import FAISS
 from sentence_transformers import SentenceTransformer
 # from langchain_community.embeddings import HuggingFaceEmbeddings
-from llama_index.embeddings.huggingface import HuggingFaceEmbedding
+# from llama_index.embeddings.huggingface import HuggingFaceEmbedding
 from langchain_community.embeddings import OpenAIEmbeddings
 import time
 from dotenv import load_dotenv
@@ -20,8 +20,6 @@ load_dotenv()
 
 #Loading the groq api key
 groq_api_key = os.getenv('GROQ_API_KEY')
-
-llm = ChatGroq(groq_api_key=groq_api_key, model_name="llama3-8b-8192")
 
 #Defining tools
 
@@ -40,13 +38,10 @@ docs = loader.load()
 # Splitting the content into chunks
 documents = RecursiveCharacterTextSplitter(chunk_size=500, chunk_overlap=50).split_documents(docs)
 
-embed_model_id = 'intfloat/e5-small-v2'
-model_kwargs = {"device": "cpu", "trust_remote_code": True}
-
-embeddings_model = HuggingFaceEmbedding(model_name="sentence-transformers/all-MiniLM-L6-v2")
+# embeddings_model = HuggingFaceEmbedding(model_name="sentence-transformers/all-MiniLM-L6-v2")
 # Storing chunks into vector DB
-vectordb = FAISS.from_documents(documents, embeddings_model)
-# vectordb = FAISS.from_documents(documents, OpenAIEmbeddings())
+# vectordb = FAISS.from_documents(documents, embeddings_model)
+vectordb = FAISS.from_documents(documents, OpenAIEmbeddings())
 
 #Retriever
 retriever = vectordb.as_retriever()
@@ -71,7 +66,7 @@ tools = [wiki, arxiv, pdf_tool]
 #Streamlit setup
 st.title("Chatbot using Groq")
 
-
+llm = ChatGroq(groq_api_key=groq_api_key, model_name="llama3-8b-8192")
 
 #Prompt
 prompt = ChatPromptTemplate.from_template(
