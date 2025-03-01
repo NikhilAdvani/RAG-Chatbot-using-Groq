@@ -21,6 +21,7 @@ load_dotenv()
 #Loading the groq api key
 groq_api_key = os.getenv('GROQ_API_KEY')
 
+llm = ChatGroq(groq_api_key=groq_api_key, model_name="llama3-8b-8192")
 
 #Defining tools
 
@@ -44,7 +45,7 @@ model_kwargs = {"device": "cpu", "trust_remote_code": True}
 
 embeddings_model = HuggingFaceEmbedding(model_name="sentence-transformers/all-MiniLM-L6-v2")
 # Storing chunks into vector DB
-vectordb = FAISS.from_documents(documents, embeddings_model)
+vectordb = FAISS.from_documents(documents, llm=llm, embeddings_model)
 # vectordb = FAISS.from_documents(documents, OpenAIEmbeddings())
 
 #Retriever
@@ -69,7 +70,7 @@ tools = [wiki, arxiv, pdf_tool]
 
 #Streamlit setup
 st.title("Chatbot using Groq")
-llm = ChatGroq(groq_api_key=groq_api_key, model_name="llama3-8b-8192")
+
 
 
 #Prompt
