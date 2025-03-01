@@ -45,7 +45,7 @@ model_kwargs = {"device": "cpu", "trust_remote_code": True}
 
 embeddings_model = HuggingFaceEmbedding(model_name="sentence-transformers/all-MiniLM-L6-v2")
 # Storing chunks into vector DB
-vectordb = FAISS.from_documents(documents, llm=llm, embeddings_model)
+vectordb = FAISS.from_documents(documents, llm, embeddings_model)
 # vectordb = FAISS.from_documents(documents, OpenAIEmbeddings())
 
 #Retriever
