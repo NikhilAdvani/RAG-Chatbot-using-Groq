@@ -8,7 +8,8 @@ from langchain_core.prompts import ChatPromptTemplate
 from langchain_community.vectorstores import Chroma
 from langchain_community.vectorstores import FAISS
 from sentence_transformers import SentenceTransformer
-from langchain_community.embeddings import HuggingFaceEmbeddings
+# from langchain_community.embeddings import HuggingFaceEmbeddings
+from llama_index.embeddings.huggingface import HuggingFaceEmbedding
 from langchain_community.embeddings import OpenAIEmbeddings
 import time
 from dotenv import load_dotenv
@@ -41,8 +42,7 @@ documents = RecursiveCharacterTextSplitter(chunk_size=500, chunk_overlap=50).spl
 embed_model_id = 'intfloat/e5-small-v2'
 model_kwargs = {"device": "cpu", "trust_remote_code": True}
 
-embeddings_model = HuggingFaceEmbeddings(model_name=embed_model_id, model_kwargs=model_kwargs)
-
+embeddings_model = HuggingFaceEmbedding(model_name="sentence-transformers/all-MiniLM-L6-v2")
 # Storing chunks into vector DB
 vectordb = FAISS.from_documents(documents, embeddings_model)
 # vectordb = FAISS.from_documents(documents, OpenAIEmbeddings())
